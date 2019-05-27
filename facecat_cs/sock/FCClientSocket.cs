@@ -1,3 +1,13 @@
+/*捂脸猫FaceCat框架 v1.0
+ 1.创始人-矿洞程序员-上海宁米科技创始人-脉脉KOL-陶德 (微信号:suade1984);
+ 2.联合创始人-上海宁米科技创始人-袁立涛(微信号:wx627378127);
+ 3.联合创始人-肖添龙(微信号:xiaotianlong_luu);
+ 4.联合开发者-陈晓阳(微信号:chenxiaoyangzxy)，助理-朱炜(微信号:cnnic_zhu);
+ 5.该框架开源协议为BSD，欢迎对我们的创业活动进行各种支持，欢迎更多开发者加入。
+ 包含C/C++,Java,C#,iOS,MacOS,Linux六个版本的图形和通讯服务框架。
+ */
+
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +16,23 @@ using System.Net;
 using System.Threading;
 
 namespace FaceCat {
+    /// <summary>
+    /// 客户端套接字连接
+    /// </summary>
     public class FCClientSocket {
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="type">类型</param>
+        /// <param name="proxyType">代理类型</param>
+        /// <param name="ip">IP地址</param>
+        /// <param name="port">端口</param>
+        /// <param name="proxyIp">代理IP</param>
+        /// <param name="proxyPort">代理端口</param>
+        /// <param name="proxyUserName">用户名</param>
+        /// <param name="proxyUserPwd">密码</param>
+        /// <param name="proxyDomain">域</param>
+        /// <param name="timeout">超时</param>
         public FCClientSocket(int type, long proxyType, String ip, int port, String proxyIp, int proxyPort, String proxyUserName, String proxyUserPwd, String proxyDomain, int timeout) {
             m_blnProxyServerOk = true;
             m_proxyDomain = proxyDomain;
@@ -21,21 +47,69 @@ namespace FaceCat {
             m_type = type;
         }
 
+        /// <summary>
+        /// 代理服务是否OK
+        /// </summary>
         private bool m_blnProxyServerOk;
+        /// <summary>
+        /// 是否连接
+        /// </summary>
         private bool m_connected;
+        /// <summary>
+        /// 套接字ID
+        /// </summary>
         public int m_hSocket;
+        /// <summary>
+        /// IP地址
+        /// </summary>
         private String m_ip;
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         private bool m_isDeleted;
+        /// <summary>
+        /// 端口
+        /// </summary>
         private int m_port;
+        /// <summary>
+        /// 域
+        /// </summary>
         private String m_proxyDomain;
+        /// <summary>
+        /// 代理类型
+        /// </summary>
         private long m_proxyType;
+        /// <summary>
+        /// 代理IP
+        /// </summary>
         private String m_proxyIp;
+        /// <summary>
+        /// 代理端口
+        /// </summary>
         private int m_proxyPort;
+        /// <summary>
+        /// 代理用户名
+        /// </summary>
         private String m_proxyUserName;
+        /// <summary>
+        /// 代理密码
+        /// </summary>
         private String m_proxyUserPwd;
+        /// <summary>
+        /// 套接字对象
+        /// </summary>
         private Socket m_socket = null;
+        /// <summary>
+        /// 超时
+        /// </summary>
         private int m_timeout;
+        /// <summary>
+        /// 类型
+        /// </summary>
         private int m_type;
+        /// <summary>
+        /// UDP套接字对象
+        /// </summary>
         private Socket m_udpSocket = null;
 
         /// <summary>
@@ -45,6 +119,10 @@ namespace FaceCat {
             delete();
         }
 
+        /// <summary>
+        /// 关闭服务
+        /// </summary>
+        /// <returns>是否关闭</returns>
         public int close() {
             int ret = -1;
             if (m_socket != null) {
@@ -55,8 +133,8 @@ namespace FaceCat {
                 catch (Exception ex) {
                     byte[] rmsg = new byte[1];
                     rmsg[0] = (byte)((char)2);
-                    //FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg, 1);
-                    //FCClientSockets.writeClientLog(m_hSocket, m_hSocket, 2, "socket exit");
+                    FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg, 1);
+                    FCClientSockets.writeClientLog(m_hSocket, m_hSocket, 2, "socket exit");
                     ret = -1;
                 }
             }
@@ -68,8 +146,8 @@ namespace FaceCat {
                 catch (Exception ex) {
                     byte[] rmsg = new byte[1];
                     rmsg[0] = (byte)((char)2);
-                    //FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg, 1);
-                    //FCClientSockets.writeClientLog(m_hSocket, m_hSocket, 2, "udp exit");
+                    FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg, 1);
+                    FCClientSockets.writeClientLog(m_hSocket, m_hSocket, 2, "udp exit");
                     ret = -1;
                 }
             }
@@ -77,10 +155,18 @@ namespace FaceCat {
             return ret;
         }
 
+        /// <summary>
+        /// 连接
+        /// </summary>
+        /// <returns></returns>
         public ConnectStatus connect() {
             return connectStandard();
         }
 
+        /// <summary>
+        /// 标准连接
+        /// </summary>
+        /// <returns>状态</returns>
         private ConnectStatus connectStandard() {
             ConnectStatus status = ConnectStatus.CONNECT_SERVER_FAIL;
             IPAddress ip = IPAddress.Parse(m_ip);
@@ -97,22 +183,41 @@ namespace FaceCat {
             return status;
         }
 
+        /// <summary>
+        /// HTTP代理连接
+        /// </summary>
+        /// <returns>状态</returns>
         private ConnectStatus connectByHttp() {
             return ConnectStatus.SUCCESS;
         }
 
+        /// <summary>
+        /// Sock4代理连接
+        /// </summary>
+        /// <returns>状态</returns>
         private ConnectStatus connectBySock4() {
             return ConnectStatus.SUCCESS;
         }
 
+        /// <summary>
+        /// Sock5代理连接
+        /// </summary>
+        /// <returns>状态</returns>
         private ConnectStatus connectBySock5() {
             return ConnectStatus.SUCCESS;
         }
 
+        /// <summary>
+        /// 连接代理服务器
+        /// </summary>
+        /// <returns>状态</returns>
         private ConnectStatus connectProxyServer() {
             return ConnectStatus.SUCCESS;
         }
 
+        /// <summary>
+        /// 删除
+        /// </summary>
         public void delete() {
             if (!m_isDeleted) {
                 close();
@@ -121,6 +226,9 @@ namespace FaceCat {
             }
         }
 
+        /// <summary>
+        /// 运行
+        /// </summary>
         public void run() {
             byte[] str = null;
             bool get = false;
@@ -142,8 +250,8 @@ namespace FaceCat {
                     if (len == 0 || len == -1) {
                         byte[] rmsg = new byte[1];
                         rmsg[0] = (byte)((char)3);
-                        //FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg, 1);
-                        //FCClientSockets.writeClientLog(m_hSocket, m_hSocket, 3, "socket error");
+                        FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg, 1);
+                        FCClientSockets.writeClientLog(m_hSocket, m_hSocket, 3, "socket error");
                         break;
                     }
                     index = 0;
@@ -180,7 +288,7 @@ namespace FaceCat {
                         pos += remain;
                         index += remain;
                         if (!get) {
-                            //FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, str, head);
+                            FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, str, head);
                             head = 0;
                             pos = 0;
                             if (len - index == 0 || len - index >= intSize) {
@@ -202,11 +310,17 @@ namespace FaceCat {
             }
             byte[] rmsg2 = new byte[1];
             rmsg2[0] = (byte)((char)2);
-            //FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg, 1);
-            //FCClientSockets.writeClientLog(m_hSocket, m_hSocket, 2, "socket exit");
+            FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg, 1);
+            FCClientSockets.writeClientLog(m_hSocket, m_hSocket, 2, "socket exit");
             m_connected = false;
         }
 
+        /// <summary>
+        /// 发送数据
+        /// </summary>
+        /// <param name="str">数据</param>
+        /// <param name="len">长度</param>
+        /// <returns>状态</returns>
         public int send(byte[] str, int len) {
             if (m_socket == null || !m_connected) {
                 return -1;
@@ -214,6 +328,12 @@ namespace FaceCat {
             return m_socket.Send(str);
         }
 
+        /// <summary>
+        /// 发送UDP数据
+        /// </summary>
+        /// <param name="str">数据</param>
+        /// <param name="len">长度</param>
+        /// <returns>状态</returns>
         public int sendTo(byte[] str, int len) {
             if (m_udpSocket == null || !m_connected) {
                 return -1;

@@ -1,3 +1,12 @@
+/*捂脸猫FaceCat框架 v1.0
+ 1.创始人-矿洞程序员-上海宁米科技创始人-脉脉KOL-陶德 (微信号:suade1984);
+ 2.联合创始人-上海宁米科技创始人-袁立涛(微信号:wx627378127);
+ 3.联合创始人-肖添龙(微信号:xiaotianlong_luu);
+ 4.联合开发者-陈晓阳(微信号:chenxiaoyangzxy)，助理-朱炜(微信号:cnnic_zhu);
+ 5.该框架开源协议为BSD，欢迎对我们的创业活动进行各种支持，欢迎更多开发者加入。
+ 包含C/C++,Java,C#,iOS,MacOS,Linux六个版本的图形和通讯服务框架。
+ */
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,13 +16,36 @@ using System.Net;
 using System.Threading;
 
 namespace FaceCat {
+    /// <summary>
+    /// 服务端套接字
+    /// </summary>
     public class FCServerSocket {
+        /// <summary>
+        /// 同步参数
+        /// </summary>
         private SocketAsyncEventArgs m_args;
+        /// <summary>
+        /// 数据集合
+        /// </summary>
         public ArrayList<SOCKDATA> m_datas = new ArrayList<SOCKDATA>();
+        /// <summary>
+        /// 套接字ID
+        /// </summary>
         public int m_hSocket;
+        /// <summary>
+        /// 端口
+        /// </summary>
         private int m_port;
+        /// <summary>
+        /// 套接字对象
+        /// </summary>
         private Socket m_socket = null;
 
+        /// <summary>
+        /// 接收TCP的线程
+        /// </summary>
+        /// <param name="sender">调用者</param>
+        /// <param name="e">参数</param>
         private unsafe void acceptHandleTCP(object sender, SocketAsyncEventArgs e) {
             try {
                 Socket socket = e.AcceptSocket;
@@ -37,6 +69,10 @@ namespace FaceCat {
             } catch { }
         }
 
+        /// <summary>
+        /// 开始接收
+        /// </summary>
+        /// <param name="e">参数</param>
         private void beginAccept(SocketAsyncEventArgs e) {
             e.AcceptSocket = null;
             //异步操作完成，返回false
@@ -45,6 +81,10 @@ namespace FaceCat {
             }
         }
 
+        /// <summary>
+        /// 关闭
+        /// </summary>
+        /// <returns>状态</returns>
         public int close() {
             if (m_socket != null) {
                 try {
@@ -57,6 +97,11 @@ namespace FaceCat {
             return -1;
         }
 
+        /// <summary>
+        /// 关闭客户端
+        /// </summary>
+        /// <param name="socketID">套接字ID</param>
+        /// <returns>状态</returns>
         public int closeClient(int socketID) {
             try {
                 if (m_datas[socketID] != null) {
@@ -68,6 +113,11 @@ namespace FaceCat {
             return -1;
         }
 
+        /// <summary>
+        /// 完成端口完成事件
+        /// </summary>
+        /// <param name="sender">调用者</param>
+        /// <param name="e">参数</param>
         private void onIoCompleted(object sender, SocketAsyncEventArgs e) {
             switch (e.LastOperation) {
                 case SocketAsyncOperation.Receive:
@@ -81,6 +131,10 @@ namespace FaceCat {
             }
         }
 
+        /// <summary>
+        /// 处理接收
+        /// </summary>
+        /// <param name="e">参数</param>
         private void processReceive(SocketAsyncEventArgs e) {
             try {
                 if (e.BytesTransferred > 0) {
@@ -110,6 +164,10 @@ namespace FaceCat {
             }
         }
 
+        /// <summary>
+        /// 处理发送
+        /// </summary>
+        /// <param name="e">参数</param>
         private void processSend(SocketAsyncEventArgs e) {
             if (e.SocketError == SocketError.Success) {
                 //接收完毕开始下次接收
@@ -121,6 +179,11 @@ namespace FaceCat {
             }
         }
 
+        /// <summary>
+        /// 接收数据
+        /// </summary>
+        /// <param name="data">数据</param>
+        /// <returns>状态</returns>
         public int recv(SOCKDATA data) {
             if (!data.m_submit) {
                 if (data.m_len == 1024 && data.m_buffer[0] == 'm' && data.m_buffer[1] == 'i' && data.m_buffer[2] == 'a' && data.m_buffer[3] == 'o') {
@@ -183,6 +246,13 @@ namespace FaceCat {
             return 1;
         }
 
+        /// <summary>
+        /// 发送数据
+        /// </summary>
+        /// <param name="socketID">套接字ID</param>
+        /// <param name="str">字符串</param>
+        /// <param name="len">长度</param>
+        /// <returns>状态</returns>
         public int send(int socketID, byte[] str, int len) {
             if (m_socket == null) {
                 return -1;
@@ -194,6 +264,11 @@ namespace FaceCat {
             }
         }
 
+        /// <summary>
+        /// 开始TCP服务
+        /// </summary>
+        /// <param name="port">端口</param>
+        /// <returns>状态</returns>
         public unsafe int startTCP(int port) {
             m_port = port;
             try {

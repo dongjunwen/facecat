@@ -13,6 +13,9 @@ using System.Text;
 using System.Net.Sockets;
 
 namespace FaceCat {
+    /// <summary>
+    /// Socket数据
+    /// </summary>
     public class SOCKDATA {
         public byte[] m_buffer = null;
         public int m_bufferRemain;
@@ -30,6 +33,9 @@ namespace FaceCat {
         public bool m_submit;
     }
 
+    /// <summary>
+    /// 连接状态
+    /// </summary>
     public enum ConnectStatus {
         SUCCESS,
         CONNECT_PROXY_FAIL,
