@@ -432,7 +432,7 @@ namespace FaceCat {
         /// 添加服务
         /// </summary>
         /// <param name="service">服务</param>
-        public static void AddService(FCServerService service) {
+        public static void addService(FCServerService service) {
             m_services.put(service.ServiceID, service);
         }
 
@@ -678,7 +678,7 @@ namespace FaceCat {
         /// 取消注册数据监听
         /// </summary>
         /// <param name="requestID">请求ID</param>
-        public virtual void UnRegisterListener(int requestID) {
+        public virtual void unRegisterListener(int requestID) {
             lock (m_listeners) {
                 m_listeners.Remove(requestID);
             }

@@ -310,7 +310,7 @@ namespace FaceCat {
             }
             byte[] rmsg2 = new byte[1];
             rmsg2[0] = (byte)((char)2);
-            FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg, 1);
+            FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg2, 1);
             FCClientSockets.writeClientLog(m_hSocket, m_hSocket, 2, "socket exit");
             m_connected = false;
         }
