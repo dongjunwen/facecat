@@ -53,6 +53,7 @@ namespace FaceCat {
                 SOCKDATA data = new SOCKDATA();
                 data.m_socket = socket;
                 int socketID = (int)socket.Handle;
+                data.m_hSocket = socketID;
                 m_datas[socketID] = data;
                 String remoteIP = ((IPEndPoint)socket.RemoteEndPoint).Address.ToString();
                 int remotePort = ((IPEndPoint)socket.RemoteEndPoint).Port;
@@ -66,7 +67,8 @@ namespace FaceCat {
                     processReceive(args);
                 }
                 beginAccept(e);
-            } catch { }
+            } catch (Exception ex) {
+            }
         }
 
         /// <summary>
@@ -153,13 +155,17 @@ namespace FaceCat {
                                 return;
                             }
                         }
+                        if (!e.AcceptSocket.ReceiveAsync(e)) {
+                            processReceive(e);
+                        }
                     }
+                } else {
+                    int socketID2 = (int)e.AcceptSocket.Handle;
+                    SOCKDATA data2 = m_datas[socketID2];
+                    data2.m_socket.Close();
+                    m_datas[socketID2] = null;
+                    FCServerSockets.writeServerLog(socketID2, m_hSocket, 2, "socket exit");
                 }
-                int socketID2 = (int)e.AcceptSocket.Handle;
-                SOCKDATA data2 = m_datas[socketID2];
-                data2.m_socket.Close();
-                m_datas[socketID2] = null;
-                FCServerSockets.writeServerLog(socketID2, m_hSocket, 2, "socket exit");
             } catch (Exception ex) {
             }
         }
@@ -200,14 +206,12 @@ namespace FaceCat {
                 if (!data.m_get) {
                     diffSize = intSize - data.m_headSize;
                     if (diffSize == 0) {
-                        data.m_head = (byte)(0xff & data.m_buffer[data.m_index]) | (byte)(0xff00 & (data.m_buffer[data.m_index + 1] << 8))
-                                | (byte)(0xff0000 & (data.m_buffer[data.m_index + 2] << 16)) | (byte)(0xff000000 & (data.m_buffer[data.m_index + 3] << 24));
+                        data.m_head = (((data.m_buffer[data.m_index] | (data.m_buffer[data.m_index + 1] << 8)) | (data.m_buffer[data.m_index + 2] << 0x10)) | (data.m_buffer[data.m_index + 3] << 0x18));
                     } else {
                         for (int i = 0; i < diffSize; i++) {
                             data.m_headStr[data.m_headSize + i] = data.m_buffer[i];
                         }
-                        data.m_head = (byte)(0xff & data.m_headStr[0]) | (byte)(0xff00 & (data.m_headStr[1] << 8))
-                                | (byte)(0xff0000 & (data.m_headStr[2] << 16)) | (byte)(0xff000000 & (data.m_headStr[3] << 24));
+                        data.m_head = (((data.m_headStr[0] | (data.m_headStr[1] << 8)) | (data.m_headStr[2] << 0x10)) | (data.m_headStr[3] << 0x18));
                     }
                     if (data.m_str != null) {
                         data.m_str = null;
@@ -254,13 +258,15 @@ namespace FaceCat {
         /// <param name="len">³¤¶È</param>
         /// <returns>×´Ì¬</returns>
         public int send(int socketID, byte[] str, int len) {
-            if (m_socket == null) {
-                return -1;
-            }
-            try {
-                return m_datas[socketID].m_socket.Send(str);
-            } catch (Exception ex) {
-                return -1;
+            lock (this) {
+                if (m_socket == null) {
+                    return -1;
+                }
+                try {
+                    return m_datas[socketID].m_socket.Send(str);
+                } catch (Exception ex) {
+                    return -1;
+                }
             }
         }
 
@@ -279,6 +285,12 @@ namespace FaceCat {
                 m_hSocket = (int)m_socket.Handle;
                 m_args = new SocketAsyncEventArgs();
                 m_args.Completed += new EventHandler<SocketAsyncEventArgs>(acceptHandleTCP);
+                m_datas = new ArrayList<SOCKDATA>();
+                for (int i = 0; i < 100000; i++) {
+                    m_datas.add(null);
+                }
+                m_socket.AcceptAsync(m_args);
+                return 1;
             } catch (Exception ex) {
             }
             return -1;

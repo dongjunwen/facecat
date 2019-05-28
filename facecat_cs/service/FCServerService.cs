@@ -306,7 +306,7 @@ namespace FaceCat {
         /// <summary>
         /// 所有的服务
         /// </summary>
-        private static HashMap<int, FCServerService> m_services = new HashMap<int, FCServerService>();
+        public static HashMap<int, FCServerService> m_services = new HashMap<int, FCServerService>();
 
         /// <summary>
         /// 等待消息队列
@@ -500,7 +500,7 @@ namespace FaceCat {
             bw.writeInt((int)4);
             byte[] bytes = bw.getBytes();
             int length = bytes.Length;
-            int ret = FCServerSockets.send(m_socketID, socketID, bytes, length);
+            int ret = FCServerSockets.send(socketID, m_socketID, bytes, length);
             bw.close();
             return ret;
         }
@@ -652,7 +652,7 @@ namespace FaceCat {
             bw.writeBytes(body);
             byte[] bytes = bw.getBytes();
             int length = bytes.Length;
-            int ret = FCServerSockets.send(m_socketID, message.m_socketID, bytes, length);
+            int ret = FCServerSockets.send(message.m_socketID, m_socketID, bytes, length);
             m_upFlow += ret;
             bw.close();
             return ret;

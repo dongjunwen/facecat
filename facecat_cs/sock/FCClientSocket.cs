@@ -129,8 +129,7 @@ namespace FaceCat {
                 try {
                     m_socket.Close();
                     ret = 1;
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     byte[] rmsg = new byte[1];
                     rmsg[0] = (byte)((char)2);
                     FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg, 1);
@@ -142,8 +141,7 @@ namespace FaceCat {
                 try {
                     m_udpSocket.Close();
                     ret = 1;
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     byte[] rmsg = new byte[1];
                     rmsg[0] = (byte)((char)2);
                     FCClientSockets.recvClientMsg(m_hSocket, m_hSocket, rmsg, 1);
@@ -170,15 +168,20 @@ namespace FaceCat {
         private ConnectStatus connectStandard() {
             ConnectStatus status = ConnectStatus.CONNECT_SERVER_FAIL;
             IPAddress ip = IPAddress.Parse(m_ip);
-            Socket clientSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            m_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try {
-                clientSocket.Connect(new IPEndPoint(ip, m_port));
+                m_socket.Connect(new IPEndPoint(ip, m_port));
                 status = ConnectStatus.SUCCESS;
                 m_connected = true;
                 Thread tThread = new Thread(new ThreadStart(run));
                 tThread.Start();
-            }
-            catch {
+                byte[] submitStr = new byte[1024];
+                submitStr[0] = (byte)'m';
+                submitStr[1] = (byte)'i';
+                submitStr[2] = (byte)'a';
+                submitStr[3] = (byte)'o';
+                send(submitStr, 1024);
+            } catch (Exception ex) {
             }
             return status;
         }
@@ -240,11 +243,10 @@ namespace FaceCat {
             EndPoint Remote = (EndPoint)(sender);//
             while (m_connected) {
                 try {
-                    byte[] buffer = new byte[10240];
+                    byte[] buffer = new byte[1024];
                     if (m_type == 0) {
                         len = m_socket.Receive(buffer);
-                    }
-                    else if (m_type == 1) {
+                    } else if (m_type == 1) {
                         m_udpSocket.ReceiveFrom(buffer, ref Remote);
                     }
                     if (len == 0 || len == -1) {
@@ -260,13 +262,12 @@ namespace FaceCat {
                         if (!get) {
                             diffSize = intSize - headSize;
                             if (diffSize == 0) {
-                                head = ((byte)(0xff & buffer[index]) | (byte)(0xff00 & (buffer[index + 1] << 8)) | (byte)(0xff0000 & (buffer[index + 2] << 16)) | (byte)(0xff000000 & (buffer[index + 3] << 24)));
-                            }
-                            else {
+                                head = (((buffer[index] | (buffer[index + 1] << 8)) | (buffer[index + 2] << 0x10)) | (buffer[index + 3] << 0x18));
+                            } else {
                                 for (int i = 0; i < diffSize; i++) {
                                     headStr[headSize + i] = buffer[i];
                                 }
-                                head = ((byte)(0xff & headStr[0]) | (byte)(0xff00 & (headStr[1] << 8)) | (byte)(0xff0000 & (headStr[2] << 16)) | (byte)(0xff000000 & (headStr[3] << 24)));
+                                head = (((buffer[0] | (buffer[1] << 8)) | (buffer[2] << 0x10)) | (buffer[3] << 0x18));
                             }
                             if (str != null) {
                                 str = null;
@@ -293,8 +294,7 @@ namespace FaceCat {
                             pos = 0;
                             if (len - index == 0 || len - index >= intSize) {
                                 headSize = intSize;
-                            }
-                            else {
+                            } else {
                                 headSize = bufferRemain - strRemain;
                                 for (int j = 0; j < headSize; j++) {
                                     headStr[j] = buffer[index + j];
@@ -303,8 +303,7 @@ namespace FaceCat {
                             }
                         }
                     }
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     break;
                 }
             }
