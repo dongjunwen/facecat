@@ -151,7 +151,6 @@ namespace FaceCat{
 		m_hSocket = 0;
 		m_recvEvent = 0;
 		m_writeLogEvent = 0;
-		wSStart();
 	}
 
 	FCServerSocket::~FCServerSocket(){
@@ -164,7 +163,6 @@ namespace FaceCat{
 			}
 		}
 		m_datas.clear();
-		wSStop();
 	}
 
 	int FCServerSocket::close(int socketID){
@@ -257,45 +255,45 @@ namespace FaceCat{
 	}
 
 	int FCServerSocket::send(int socketID, const char *str, int len){
-		//SOCKET socket = (SOCKET)socketID;
-		//fd_set fds;
-		//FD_ZERO(&fds);
-		//FD_SET(socket, &fds);
-		//timeval timeout = {1, 0};
-		//int res = select(0, 0, &fds, 0, &timeout);
-		//if (res > 0)
-		//{
-		//	return send(socket, str, len, 0);
-		//}
-		//else
-		//{
-		//	return -1;
-		//}
+		SOCKET socket = (SOCKET)socketID;
+		fd_set fds;
+		FD_ZERO(&fds);
+		FD_SET(socket, &fds);
+		timeval timeout = {1, 0};
+		int res = select(0, 0, &fds, 0, &timeout);
+		if (res > 0)
+		{
+			return ::send(socket, str, len, 0);
+		}
+		else
+		{
+			return -1;
+		}
 
-		WSAOVERLAPPED SendOverlapped = {0};
-		SendOverlapped.hEvent = WSACreateEvent();
-		WSABUF dataBuf;
-		dataBuf.buf = (char*)str;
-		dataBuf.len = len;
-		DWORD SendBytes, Flags;
-		int ret = len;
-		if(WSASend(socketID, &dataBuf, 1, &SendBytes, 0, &SendOverlapped, 0) || ERROR_SUCCESS == WSAGetLastError()){
-		  int rc = WSAWaitForMultipleEvents(1, &SendOverlapped.hEvent, TRUE, INFINITE, TRUE);
-		  if (rc == WSA_WAIT_FAILED) {
-			ret = -1;
-		  }
-		  rc = WSAGetOverlappedResult(socketID, &SendOverlapped, &SendBytes, FALSE, &Flags);
-		  if (rc == FALSE){
-			ret = -1;
-		  }
-		}
-		else{
-		long long code = WSAGetLastError();    
-		  ret = -1;
-		}
-		WSAResetEvent(SendOverlapped.hEvent);
-		WSACloseEvent(SendOverlapped.hEvent);
-		return ret;
+		//WSAOVERLAPPED SendOverlapped = {0};
+		//SendOverlapped.hEvent = WSACreateEvent();
+		//WSABUF dataBuf;
+		//dataBuf.buf = (char*)str;
+		//dataBuf.len = len;
+		//DWORD SendBytes, Flags;
+		//int ret = len;
+		//if(WSASend(socketID, &dataBuf, 1, &SendBytes, 0, &SendOverlapped, 0) || ERROR_SUCCESS == WSAGetLastError()){
+		//  int rc = WSAWaitForMultipleEvents(1, &SendOverlapped.hEvent, TRUE, INFINITE, TRUE);
+		//  if (rc == WSA_WAIT_FAILED) {
+		//	ret = -1;
+		//  }
+		//  rc = WSAGetOverlappedResult(socketID, &SendOverlapped, &SendBytes, FALSE, &Flags);
+		//  if (rc == FALSE){
+		//	ret = -1;
+		//  }
+		//}
+		//else{
+		//long long code = WSAGetLastError();    
+		//  ret = -1;
+		//}
+		//WSAResetEvent(SendOverlapped.hEvent);
+		//WSACloseEvent(SendOverlapped.hEvent);
+		//return ret;
 	}
 
 	int FCServerSocket::sendTo(const char *str, int len){
@@ -369,22 +367,14 @@ namespace FaceCat{
 		}
 	}
 
-	int count = 0;
-
 	void FCServerSocket::wSStart(){
-		if(count == 0){
 			WORD wVersionRequested;
 			WSADATA wsaData;
 			wVersionRequested = MAKEWORD(1 , 1 );
 			WSAStartup( wVersionRequested, &wsaData );
-		}
-		count++;
 	}
 
 	void FCServerSocket::wSStop(){
-		if(count == 1){
-			WSACleanup();
-		}
-		count--;
+		WSACleanup();
 	}
 }
