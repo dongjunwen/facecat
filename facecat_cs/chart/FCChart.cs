@@ -3783,11 +3783,11 @@ namespace FaceCat {
                         }
                         int curLength = 1;
                         int tTop = 2;
-                        ArrayList<CTitle> titles = div.TitleBar.Titles;
+                        ArrayList<ChartTitle> titles = div.TitleBar.Titles;
                         //—≠ª∑ª≠±ÍÃ‚
                         int titleSize = titles.size();
                         for (int i = 0; i < titleSize; i++) {
-                            CTitle title = titles.get(i);
+                            ChartTitle title = titles.get(i);
                             if (!title.Visible || title.FieldTextMode == TextMode.None) {
                                 continue;
                             }

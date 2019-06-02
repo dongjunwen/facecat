@@ -2851,7 +2851,7 @@ namespace FaceCat {
                             String strParam = var.m_parameters[i].m_expression;
                             if (strParam == "DRAWTITLE") {
                                 if (polylineShape.FieldText != null) {
-                                    m_div.TitleBar.Titles.add(new CTitle(polylineShape.FieldName, polylineShape.FieldText, polylineShape.Color, 2, true));
+                                    m_div.TitleBar.Titles.add(new ChartTitle(polylineShape.FieldName, polylineShape.FieldText, polylineShape.Color, 2, true));
                                 }
                             }
                         }
@@ -3790,7 +3790,7 @@ namespace FaceCat {
                             String strParam = var.m_parameters[i].m_expression;
                             if (strParam == "DRAWTITLE") {
                                 if (polylineShape.FieldText != null) {
-                                    m_div.TitleBar.Titles.add(new CTitle(polylineShape.FieldName, polylineShape.FieldText, polylineShape.Color, 2, true));
+                                    m_div.TitleBar.Titles.add(new ChartTitle(polylineShape.FieldName, polylineShape.FieldText, polylineShape.Color, 2, true));
                                 }
                             }
                         }
@@ -4136,7 +4136,7 @@ namespace FaceCat {
                             String strParam = var.m_parameters[i].m_expression;
                             if (strParam == "DRAWTITLE") {
                                 if (barShape.FieldText != null) {
-                                    m_div.TitleBar.Titles.add(new CTitle(barShape.FieldName, barShape.FieldText, barShape.DownColor, 2, true));
+                                    m_div.TitleBar.Titles.add(new ChartTitle(barShape.FieldName, barShape.FieldText, barShape.DownColor, 2, true));
                                 }
                                 break;
                             }

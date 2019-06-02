@@ -102,12 +102,12 @@ namespace FaceCat {
             set { m_textColor = value; }
         }
 
-        protected ArrayList<CTitle> m_titles = new ArrayList<CTitle>();
+        protected ArrayList<ChartTitle> m_titles = new ArrayList<ChartTitle>();
 
         /// <summary>
         /// 获取或设置标题
         /// </summary>
-        public virtual ArrayList<CTitle> Titles {
+        public virtual ArrayList<ChartTitle> Titles {
             get { return m_titles; }
             set { m_titles = value; }
         }
@@ -245,7 +245,7 @@ namespace FaceCat {
     /// 标题
     /// </summary>
     [Serializable()]
-    public class CTitle : FCProperty {
+    public class ChartTitle : FCProperty {
         /// <summary>
         /// 创建标题
         /// </summary>
@@ -254,7 +254,7 @@ namespace FaceCat {
         /// <param name="textColor">文字颜色</param>
         /// <param name="digit">保留小数位数</param>
         /// <param name="visible">是否可见</param>
-        public CTitle(int fieldName, String fieldText, long textColor, int digit, bool visible) {
+        public ChartTitle(int fieldName, String fieldText, long textColor, int digit, bool visible) {
             m_fieldName = fieldName;
             m_fieldText = fieldText;
             m_textColor = textColor;
