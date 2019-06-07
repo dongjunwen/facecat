@@ -310,11 +310,16 @@ namespace FaceCat{
          * @param args     参数
         */
 		void callInvokeEvents(int eventID, Object args);
-		void callKeyEvents(int eventID, char key);
-	    /**
+		/**
          * 调用键盘事件
          * @param eventID  事件ID
          * @param key      按键
+        */
+		void callKeyEvents(int eventID, char key);
+		/**
+         * 调用鼠标事件
+         * @param eventID  事件ID
+         * @param touchInfo      触摸信息
         */
 		void callTouchEvents(int eventID, FCTouchInfo touchInfo);
 	    /**

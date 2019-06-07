@@ -71,7 +71,6 @@
     <Compile Include="UI\ResizeDiv.cs" />
     <Compile Include="UI\RibbonButton.cs" />
     <Compile Include="UI\ScintillaX.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="UI\ScintillaX.Designer.cs">
       <DependentUpon>ScintillaX.cs</DependentUpon>

@@ -567,12 +567,12 @@ namespace FaceCat {
         /// <summary>
         /// 结果
         /// </summary>
-        private double m_result;
+        public double m_result;
 
         /// <summary>
         /// 复合结果
         /// </summary>
-        private CVar m_resultVar;
+        public CVar m_resultVar;
 
         /// <summary>
         /// 方法变量表
