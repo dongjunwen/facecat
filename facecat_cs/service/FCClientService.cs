@@ -182,7 +182,7 @@ namespace FaceCat {
         /// <param name="ip">地址</param>
         /// <param name="port">端口</param>
         public static int connect(String ip, int port) {
-            int socketID = FCClientSockets.connect(0, 0, ip, port, "", 0, "", "", "", 30000);
+            int socketID = connectToServer(0, ip, port, "", 0, "", "", "", 30000);
             return socketID;
         }
 

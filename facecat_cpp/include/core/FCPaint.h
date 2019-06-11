@@ -398,7 +398,7 @@ namespace FaceCat{
 		* 获取string的哈希
 		*/
 		int hashKey(string key){
-			return (char*)hashKey(key.c_str());
+			return hashKey(key.c_str());
 		}
 		/*
 		* 获取wstring上的哈希
