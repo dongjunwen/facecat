@@ -14,7 +14,6 @@ using System.Net;
 using System.IO;
 using FaceCat;
 using System.IO.Compression;
-using OwLib;
 
 namespace FaceCat {
     /// <summary>

@@ -13,7 +13,6 @@ using System.Text;
 using System.Net;
 using System.IO;
 using System.IO.Compression;
-using OwLib;
 
 namespace FaceCat {
     /// <summary>

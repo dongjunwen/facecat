@@ -17,7 +17,7 @@ using System.Web;
 using FaceCat;
 using System.Runtime.InteropServices;
 
-namespace OwLib {
+namespace FaceCat {
     /// <summary>
     /// HTTPÏà¹ØµÄ¿â
     /// </summary>
