@@ -373,11 +373,11 @@ namespace FaceCat{
     
     void FCDiv::onTouchWheel(FCTouchInfo touchInfo){
         FCView::onTouchWheel(touchInfo);
-        if (touchInfo.m_delta > 0){
+        if (touchInfo.m_delta < 0){
             lineUp();
             invalidate();
         }
-        else if (touchInfo.m_delta < 0){
+        else if (touchInfo.m_delta > 0){
             lineDown();
             invalidate();
         }

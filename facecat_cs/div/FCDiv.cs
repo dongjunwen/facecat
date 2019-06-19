@@ -498,11 +498,11 @@ namespace FaceCat {
         /// <param name="touchInfo">´¥ÃþÐÅÏ¢</param>
         public override void onTouchWheel(FCTouchInfo touchInfo) {
             base.onTouchWheel(touchInfo);
-            if (touchInfo.m_delta > 0) {
+            if (touchInfo.m_delta < 0) {
                 lineUp();
                 invalidate();
             }
-            else if (touchInfo.m_delta < 0) {
+            else if (touchInfo.m_delta > 0) {
                 lineDown();
                 invalidate();
             }

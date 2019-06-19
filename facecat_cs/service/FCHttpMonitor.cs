@@ -38,26 +38,6 @@ namespace FaceCat {
     }
 
     /// <summary>
-    /// 文件Http服务
-    /// </summary>
-    public class HttpFileData {
-        /// <summary>
-        /// 流
-        /// </summary>
-        public byte[] m_buffer;
-
-        /// <summary>
-        /// 已收到长度
-        /// </summary>
-        public long m_recvLength;
-
-        /// <summary>
-        /// 总长度
-        /// </summary>
-        public long m_totalLength;
-    }
-
-    /// <summary>
     /// Node服务
     /// </summary>
     public class FCHttpMonitor {
